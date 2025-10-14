@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { StatusServicePointPayment } from '@domain/enums/statusServicePointPaymentType.enum';
 import { SubscriptionType } from '@domain/enums/subscriptionType.enum';
 
@@ -8,7 +14,10 @@ export class ServicePointPayment {
   _id?: string;
 
   @Column({ type: 'uuid', nullable: false })
-  servicePoint_id: string;
+  servicePoints_id: string;
+
+  @Column({ type: 'uuid', nullable: false })
+  owners_id: string;
 
   @Column({
     comment: 'Last date and time of payment',
@@ -36,6 +45,14 @@ export class ServicePointPayment {
   subscriptionType: SubscriptionType;
 
   @Column({
+    comment: 'Billing period in months with respect to the subscription type',
+    type: 'integer',
+    nullable: true,
+    default: null
+  })
+  billingPeriodInMonths: number;
+
+  @Column({
     type: 'enum',
     enum: StatusServicePointPayment,
     comment: 'Service status',
@@ -51,4 +68,10 @@ export class ServicePointPayment {
     default: true,
   })
   isEnabled: boolean;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', nullable: true })
+  updatedAt?: Date;
 }

@@ -1,4 +1,3 @@
-import { ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -16,12 +15,16 @@ import { ServicePointPaymentsController } from '@infra/api/servicePointPayment.c
 // use-case-commands
 import { CreateCommandHandler } from '@app/commands/handler/create-command.handler';
 import { CreateCommandImpl } from '@app/commands/impl/create-command.impl';
+import { DeleteCommandHandler } from '@app/commands/handler/delete-command.handler';
+import { DeleteCommandImpl } from '@app/commands/impl/delete-command.impl';
 /// user-case-commands-service-point-payment
 import { CreateServicePointPaymentCommandHandler } from '@app/commands/handler/createServicePointPayment-command.handler';
 import { CreateServicePointPaymentCommandImpl } from '@app/commands/impl/createServicePointPayment-command.impl';
 // use-case-queries
 import { FindAllQueryHandler } from '@app/queries/handler/findAll-query.handler';
 import { FindAllQueryImpl } from '@app/queries/impl/findAll-query.impl';
+import { GetAllServicePointPaymentByOwnerHanlder } from '@app/queries/handler/getAllServicePointPaymentByOwner-query.handler';
+import { GetAllServicePointPaymentByOwnerImpl } from '@app/queries/impl/getAllServicePointPaymentByOwner-query.impl';
 
 // domain layer
 // domain-service
@@ -38,11 +41,15 @@ const postgresRepositoryModule = TypeOrmModule.forFeature([ServicePoint, Service
   imports: [CqrsModule, postgresRepositoryModule],
   providers: [
     CreateCommandHandler,
-    CreateServicePointPaymentCommandHandler,
     CreateCommandImpl,
+    DeleteCommandHandler,
+    DeleteCommandImpl,
+    CreateServicePointPaymentCommandHandler,
     CreateServicePointPaymentCommandImpl,
     FindAllQueryHandler,
     FindAllQueryImpl,
+    GetAllServicePointPaymentByOwnerHanlder,
+    GetAllServicePointPaymentByOwnerImpl,
     {
       provide: ServicePointService,
       useClass: ServicePointManager,
@@ -58,8 +65,10 @@ const postgresRepositoryModule = TypeOrmModule.forFeature([ServicePoint, Service
     postgresRepositoryModule,
     ServicePointService,
     CreateCommandHandler,
+    DeleteCommandHandler,
     CreateServicePointPaymentCommandHandler,
     FindAllQueryHandler,
+    GetAllServicePointPaymentByOwnerHanlder
   ],
 })
 export class ContainerModule {}

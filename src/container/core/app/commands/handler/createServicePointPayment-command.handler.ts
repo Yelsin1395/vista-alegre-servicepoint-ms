@@ -1,6 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { HttpException, HttpStatus, Logger } from '@nestjs/common';
-import { catalogCode, getCatalogDescription } from '@app/exceptions/catalog.exception';
+import { HttpStatus, Logger } from '@nestjs/common';
+import { CatalogCode, getCatalogDescription } from '@app/exceptions/catalog.exception';
+import { subscriptionDurationByType } from '@app/common/mappers/subscriptionDurationsByType.mapper';
 import { CreateServicePointPaymentCommandImpl } from '@app/commands/impl/createServicePointPayment-command.impl';
 import { ServicePointService } from '@domain/servicepoint.service';
 import { ServicePointPaymentService } from '@domain/servicePointPayment.service';
@@ -25,21 +26,23 @@ export class CreateServicePointPaymentCommandHandler implements ICommandHandler<
     if (servicePoint.isDeleted) {
       throw new RpcException({
         status: HttpStatus.NOT_FOUND,
-        errorCode: catalogCode.ERROR_SERVICE_POINT_REMOVE_404,
-        message: getCatalogDescription(catalogCode.ERROR_SERVICE_POINT_REMOVE_404)
+        errorCode: CatalogCode.ERROR_SERVICE_POINT_REMOVE_404,
+        message: getCatalogDescription(CatalogCode.ERROR_SERVICE_POINT_REMOVE_404)
       });
     }
 
     if (!servicePoint.isEnabled) {
       throw new RpcException({
         status: HttpStatus.BAD_REQUEST,
-        errorCode: catalogCode.ERROR_SERVICE_POINT_DISABLED_400,
-        message: getCatalogDescription(catalogCode.ERROR_SERVICE_POINT_DISABLED_400)
+        errorCode: CatalogCode.ERROR_SERVICE_POINT_DISABLED_400,
+        message: getCatalogDescription(CatalogCode.ERROR_SERVICE_POINT_DISABLED_400)
       });
     }
 
-    entity.servicePoint_id = servicePoint._id;
+    entity.servicePoints_id = servicePoint._id;
+    entity.owners_id = command.ownerId;
     entity.subscriptionType = command.subscriptionType;
+    entity.billingPeriodInMonths = subscriptionDurationByType[command.subscriptionType];
 
     return this.service.create(entity);
   }

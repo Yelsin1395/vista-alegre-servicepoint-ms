@@ -12,15 +12,31 @@ export class ServicePointManager implements ServicePointService {
     private readonly repository: Repository<ServicePoint>,
   ) {}
   async findAll(): Promise<ServicePoint[]> {
-    return this.repository.find();
+    return this.repository.find({ where: { isDeleted: false } });
   }
 
   async getById(id: string): Promise<ServicePoint> {
-    return this.repository.findOneBy({ _id: id });
+    return this.repository.findOneBy({ _id: id, isDeleted: false });
+  }
+
+  async isUnique(type: string): Promise<boolean> {
+    return this.repository
+      .createQueryBuilder('sp')
+      .where(`sp.type = :type AND sp.isDeleted = false`, { type })
+      .getExists();
   }
 
   async create(entity: ServicePoint): Promise<boolean> {
     const result = await this.repository.save(entity);
     return !!String(result._id);
+  }
+
+  async deleted(id: string): Promise<boolean> {
+    const sp = await this.getById(id);
+
+    sp.isDeleted = true;
+
+    await this.repository.save(sp);
+    return true;
   }
 }

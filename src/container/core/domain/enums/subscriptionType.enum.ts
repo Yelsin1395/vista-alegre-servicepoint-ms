@@ -1,6 +1,7 @@
 export enum SubscriptionType {
   MONTHLY = 'MONTHLY',
-  QUARTERLY = 'QUARTERLY',
   BIMONTHLY = 'BIMONTHLY',
+  QUARTERLY = 'QUARTERLY',
+  BIYEARLY = 'BIYEARLY',
   YEARLY = 'YEARLY'
 }
