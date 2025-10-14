@@ -50,7 +50,7 @@ jobs:
           echo "📦 Packaging application into app.tar.gz..."
 
           mkdir -p dist-package
-          cp -r src Dockerfile nest-cli.json package.json pnpm-lock.yaml tsconfig*.json assets dist/ dist-package/
+          cp -r src Dockerfile nest-cli.json package.json pnpm-lock.yaml tsconfig*.json dist/ dist-package/
 
           tar -czf app.tar.gz -C dist-package .
 
