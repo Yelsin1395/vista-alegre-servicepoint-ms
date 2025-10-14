@@ -1,19 +1,14 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { StatusServicePointPayment } from '@domain/enums/statusServicePointPaymentType.enum';
-// import { ServicePoint } from './servicePoint.entity';
-// import { Owner } from "./owner.entity";
-// import { Payment } from "./payment.entity";
+import { SubscriptionType } from '@domain/enums/subscriptionType.enum';
 
 @Entity({ name: 'servicePointPayments' })
 export class ServicePointPayment {
   @PrimaryGeneratedColumn('uuid')
   _id?: string;
 
-  // @ManyToOne(() => ServicePoint, (servicePoint) => servicePoint.ServicePointPayments)
-  // servicePoint: ServicePoint;
-
-  // @ManyToOne(() => Owner, (owner) => owner.ServicePointPayments)
-  // owner: Owner;
+  @Column({ type: 'uuid', nullable: false })
+  servicePoint_id: string;
 
   @Column({
     comment: 'Last date and time of payment',
@@ -33,6 +28,15 @@ export class ServicePointPayment {
 
   @Column({
     type: 'enum',
+    enum: SubscriptionType,
+    comment: 'Service status',
+    nullable: false,
+    default: SubscriptionType.MONTHLY,
+  })
+  subscriptionType: SubscriptionType;
+
+  @Column({
+    type: 'enum',
     enum: StatusServicePointPayment,
     comment: 'Service status',
     nullable: true,
@@ -47,7 +51,4 @@ export class ServicePointPayment {
     default: true,
   })
   isEnabled: boolean;
-
-  // @OneToMany(() => Payment, (payment) => payment.servicePointPayment)
-  // payments: Payment[];
 }

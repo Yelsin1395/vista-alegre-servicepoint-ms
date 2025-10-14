@@ -6,6 +6,7 @@ import { CommonLoggerModule } from 'caserita-infra/packages/common-logger';
 import { ContainerModule } from './container/container.module';
 import { schemaEnvVars } from '@infra/context/envs.validate';
 import { ServicePoint } from '@domain/entities/servicepoint.entity';
+import { ServicePointPayment } from '@domain/entities/servicePointPayment.entity';
 
 @Module({
   imports: [
@@ -17,12 +18,14 @@ import { ServicePoint } from '@domain/entities/servicepoint.entity';
       envFilePath: ['.env.development.local'],
       validationSchema: schemaEnvVars,
     }),
-    CommonDatabaseModule.register([{
-      name: DatabaseConnectionType.MONGODB_CONNECTION,
-      type: DatabaseEnumType.MONGODB,
-      entities: [ServicePoint]
-    }]),
-    ContainerModule.register(),
+    CommonDatabaseModule.register([
+      {
+        name: DatabaseConnectionType.POSTGRES_CONNECTION,
+        type: DatabaseEnumType.POSTGES,
+        entities: [ServicePoint, ServicePointPayment],
+      },
+    ]),
+    ContainerModule,
   ],
 })
 export class AppModule {}

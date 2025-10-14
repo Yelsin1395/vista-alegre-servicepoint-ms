@@ -1,6 +1,7 @@
-import { ObjectId } from 'typeorm';
+import { ServicePointType } from '@domain/enums/servicePointType.enum';
 
 export interface CreateServicePointRequest {
-  id?: ObjectId;
-  name: string;
+  type: ServicePointType;
+  price: number;
+  description: string;
 }

@@ -2,18 +2,19 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { ServicePointType } from '@domain/enums/servicePointType.enum';
 import { CurrencyType } from '@domain/enums/currencyType.enum';
-// import { ServicePointPayment } from './servicePointPayment.entity';
 
 @Entity({ name: 'servicePoints' })
 export class ServicePoint {
   @PrimaryGeneratedColumn('uuid')
   _id?: string;
 
+  @Index()
   @Column({
     type: 'enum',
     enum: ServicePointType,
@@ -56,7 +57,4 @@ export class ServicePoint {
 
   @UpdateDateColumn({ type: 'timestamp', nullable: true })
   updatedAt?: Date;
-
-  // @OneToMany(() => ServicePointPayment, (servicePointPayment) => servicePointPayment.servicePoint)
-  // ServicePointPayments: ServicePointPayment[]
 }

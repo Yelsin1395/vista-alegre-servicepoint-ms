@@ -13,7 +13,7 @@ export class ServicePointController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Get()
+  @Get('/list')
   findAll() {
     return this.queryBus.execute(new FindAllQueryImpl());
   }

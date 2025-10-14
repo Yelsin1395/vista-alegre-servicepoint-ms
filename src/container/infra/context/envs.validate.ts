@@ -8,7 +8,6 @@ export const schemaEnvVars = Joi.object({
     .valid('development', 'production', 'test', 'provision')
     .default('development'),
   PORT: Joi.number().port().default(3000),
-  NATS_SERVERS: Joi.string().required().allow(''),
   LOGGER_LEVEL: Joi.string()
     .valid(...Object.values(LoggerLevelMap))
     .required(),
@@ -19,8 +18,4 @@ export const schemaEnvVars = Joi.object({
   TOKEN_LOGTAIL_LOGGER: Joi.string()
     .required()
     .when('LOGGER_CLOUD', { is: LogService.LOCAL, then: Joi.string().allow('') }),
-  DB_USER_MONGO: Joi.string().required(),
-  DB_KEY_MONGO: Joi.string().required(),
-  DB_HOST_MONGO: Joi.string().required(),
-  DB_CONTAINER_NAME_MONGO: Joi.string().required(),
 });
