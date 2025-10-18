@@ -48,7 +48,7 @@ export class ServicePointPayment {
     comment: 'Billing period in months with respect to the subscription type',
     type: 'integer',
     nullable: true,
-    default: null
+    default: null,
   })
   billingPeriodInMonths: number;
 
@@ -79,7 +79,12 @@ export class ServicePointPayment {
   })
   isEnabled: boolean;
 
-  @Column({ comment: 'Service point payment delete', type: 'boolean', nullable: false, default: false })
+  @Column({
+    comment: 'Service point payment delete',
+    type: 'boolean',
+    nullable: false,
+    default: false,
+  })
   isDeleted?: boolean;
 
   @CreateDateColumn({ type: 'timestamp' })

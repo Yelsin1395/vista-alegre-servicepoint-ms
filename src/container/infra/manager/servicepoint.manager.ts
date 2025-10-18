@@ -31,12 +31,8 @@ export class ServicePointManager implements ServicePointService {
     return !!String(result._id);
   }
 
-  async deleted(id: string): Promise<boolean> {
-    const sp = await this.getById(id);
-
-    sp.isDeleted = true;
-
-    await this.repository.save(sp);
+  async deleted(entity: ServicePoint): Promise<boolean> {
+    await this.repository.save(entity);
     return true;
   }
 }

@@ -7,6 +7,10 @@ export class DeleteCommandHandler implements ICommandHandler<DeleteCommandImpl> 
   constructor(private readonly service: ServicePointService) {}
 
   async execute({ command }: DeleteCommandImpl): Promise<boolean> {
-    return this.service.deleted(command.id);
+    const entity = await this.service.getById(command.id);
+
+    entity.isDeleted = true;
+
+    return this.service.deleted(entity);
   }
 }

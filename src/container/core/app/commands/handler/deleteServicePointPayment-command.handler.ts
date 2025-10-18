@@ -9,6 +9,10 @@ export class DeleteServicePointPaymentCommandHandler
   constructor(private readonly service: ServicePointPaymentService) {}
 
   async execute({ command }: DeleteServicePointPaymentCommandImpl): Promise<boolean> {
-    return this.service.deletedByOwnerId(command.id, command.ownerId);
+    const entity = await this.service.getByOwnerId(command.id, command.ownerId);
+
+    entity.isDeleted = true;
+
+    return this.service.deleted(entity);
   }
 }

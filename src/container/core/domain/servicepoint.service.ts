@@ -5,5 +5,5 @@ export abstract class ServicePointService {
   abstract getById(id: string): Promise<ServicePoint>;
   abstract isUnique(type: string): Promise<boolean>;
   abstract create(entity: ServicePoint): Promise<boolean>;
-  abstract deleted(id: string): Promise<boolean>;
+  abstract deleted(entity: ServicePoint): Promise<boolean>;
 }

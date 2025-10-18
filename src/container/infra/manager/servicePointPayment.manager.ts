@@ -7,6 +7,7 @@ import { ServicePointPaymentService } from '@domain/servicePointPayment.service'
 import { ServicePointPayment } from '@domain/entities/servicePointPayment.entity';
 import { ServicePoint } from '@domain/entities/servicepoint.entity';
 import { GetAllServicePointPaymentByOwmerResponse } from '@domain/interfaces/getAllServicePointPaymentByOwnerResponse.interface';
+import { SubscriptionType } from '@domain/enums/subscriptionType.enum';
 
 @Injectable()
 export class ServicePointPaymentManager implements ServicePointPaymentService {
@@ -24,7 +25,7 @@ export class ServicePointPaymentManager implements ServicePointPaymentService {
     return rawResult.map(ServicePointPaymentMapper.toServicePointPaymentByOwmerResponse);
   }
 
-  private async getByOwnerId(id: string, ownerId: string) {
+  async getByOwnerId(id: string, ownerId: string): Promise<ServicePointPayment> {
     return this.repository.findOneBy({ _id: id, owners_id: ownerId });
   }
 
@@ -40,12 +41,13 @@ export class ServicePointPaymentManager implements ServicePointPaymentService {
     return !!String(result._id);
   }
 
-  async deletedByOwnerId(id: string, ownerId: string): Promise<boolean> {
-    const spp = await this.getByOwnerId(id, ownerId);
+  async update(entity: ServicePointPayment): Promise<boolean> {
+    await this.repository.save(entity);
+    return true;
+  }
 
-    spp.isDeleted = true;
-
-    await this.repository.save(spp);
+  async deleted(entity: ServicePointPayment): Promise<boolean> {
+    await this.repository.save(entity);
     return true;
   }
 }
