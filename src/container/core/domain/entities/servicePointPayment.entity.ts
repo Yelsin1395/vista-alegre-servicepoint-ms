@@ -53,6 +53,16 @@ export class ServicePointPayment {
   billingPeriodInMonths: number;
 
   @Column({
+    comment: 'Total to pay per subscription',
+    type: 'numeric',
+    precision: 6,
+    scale: 2,
+    nullable: false,
+    default: 0,
+  })
+  totalPaymentBySubscription: number;
+
+  @Column({
     type: 'enum',
     enum: StatusServicePointPayment,
     comment: 'Service status',
@@ -68,6 +78,9 @@ export class ServicePointPayment {
     default: true,
   })
   isEnabled: boolean;
+
+  @Column({ comment: 'Service point payment delete', type: 'boolean', nullable: false, default: false })
+  isDeleted?: boolean;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

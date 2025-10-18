@@ -1,12 +1,15 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ValidateBody, ValidateParams } from 'caserita-infra/packages/cdecorator';
+import { GetAllServicePointPaymentInputValidator } from '@infra/validator/getAllServicePointPaymentInput.validator';
 import { CreateServicePointPaymentInputValidator } from '@infra/validator/createServicePointPaymentInput.validator';
+import { DeleteServicePointPaymentInputValidator } from '@infra/validator/deleteServicePointPaymentInput.validator';
 import { GetAllServicePointPaymentByOwnerImpl } from '@app/queries/impl/getAllServicePointPaymentByOwner-query.impl';
 import { CreateServicePointPaymentCommandImpl } from '@app/commands/impl/createServicePointPayment-command.impl';
+import { DeleteServicePointPaymentCommandImpl } from '@app/commands/impl/deleteServicePointPayment-command.impl';
 import { GetAllByOwnerRequest } from '@domain/interfaces/getAllServicePointPaymentByOwnerRequest.interface';
 import { CreateServicePointPaymentRequest } from '@domain/interfaces/createServicePointPaymentRequest.interface';
-import { GetAllServicePointPaymentInputValidator } from '@infra/validator/getAllServicePointPaymentInput.validator';
+import { DeleteServicePointPaymentRequest } from '@domain/interfaces/deleteServicePointPaymentRequest';
 
 @Controller('servicepointpayments')
 export class ServicePointPaymentsController {
@@ -27,5 +30,13 @@ export class ServicePointPaymentsController {
     @ValidateBody(CreateServicePointPaymentInputValidator) input: CreateServicePointPaymentRequest,
   ) {
     return this.commandBus.execute(new CreateServicePointPaymentCommandImpl(input));
+  }
+
+  @Delete('/delete/:id/:ownerId')
+  deletedByOwnerId(
+    @ValidateParams(DeleteServicePointPaymentInputValidator)
+    params: DeleteServicePointPaymentRequest,
+  ) {
+    return this.commandBus.execute(new DeleteServicePointPaymentCommandImpl(params));
   }
 }

@@ -49,7 +49,7 @@ export class ServicePoint {
   @Column({ comment: 'Service point enabled', type: 'boolean', nullable: false, default: true })
   isEnabled: boolean;
 
-  @Column({ comment: 'Service point owner', type: 'boolean', nullable: false, default: false })
+  @Column({ comment: 'Service point delete', type: 'boolean', nullable: false, default: false })
   isDeleted: boolean;
 
   @CreateDateColumn({ type: 'timestamp' })

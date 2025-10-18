@@ -20,6 +20,8 @@ import { DeleteCommandImpl } from '@app/commands/impl/delete-command.impl';
 /// user-case-commands-service-point-payment
 import { CreateServicePointPaymentCommandHandler } from '@app/commands/handler/createServicePointPayment-command.handler';
 import { CreateServicePointPaymentCommandImpl } from '@app/commands/impl/createServicePointPayment-command.impl';
+import { DeleteServicePointPaymentCommandHandler } from '@app/commands/handler/deleteServicePointPayment-command.handler';
+import { DeleteServicePointPaymentCommandImpl } from '@app/commands/impl/deleteServicePointPayment-command.impl';
 // use-case-queries
 import { FindAllQueryHandler } from '@app/queries/handler/findAll-query.handler';
 import { FindAllQueryImpl } from '@app/queries/impl/findAll-query.impl';
@@ -46,6 +48,8 @@ const postgresRepositoryModule = TypeOrmModule.forFeature([ServicePoint, Service
     DeleteCommandImpl,
     CreateServicePointPaymentCommandHandler,
     CreateServicePointPaymentCommandImpl,
+    DeleteServicePointPaymentCommandHandler,
+    DeleteServicePointPaymentCommandImpl,
     FindAllQueryHandler,
     FindAllQueryImpl,
     GetAllServicePointPaymentByOwnerHanlder,
@@ -67,6 +71,7 @@ const postgresRepositoryModule = TypeOrmModule.forFeature([ServicePoint, Service
     CreateCommandHandler,
     DeleteCommandHandler,
     CreateServicePointPaymentCommandHandler,
+    DeleteServicePointPaymentCommandHandler,
     FindAllQueryHandler,
     GetAllServicePointPaymentByOwnerHanlder
   ],

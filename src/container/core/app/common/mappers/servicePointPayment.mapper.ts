@@ -12,6 +12,7 @@ export class ServicePointPaymentMapper {
       nextPayment: rawData.nextpayment,
       subscriptionType: rawData.subscriptiontype,
       billingPeriodInMonths: rawData.billingperiodinmonths,
+      totalPaymentBySubscription: rawData.totalpaymentbysubscription,
       serviceStatus: rawData.servicestatus,
       isEnabled: rawData.isenabled,
       createdAt: rawData.createdat,

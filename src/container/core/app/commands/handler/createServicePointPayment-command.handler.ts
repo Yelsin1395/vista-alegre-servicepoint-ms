@@ -20,6 +20,14 @@ export class CreateServicePointPaymentCommandHandler implements ICommandHandler<
   async execute({ command }: CreateServicePointPaymentCommandImpl): Promise<boolean> {
     const entity = new ServicePointPayment();
 
+    if (await this.service.isUnique(command.servicePointId, command.ownerId)) {
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        errorCode: CatalogCode.ERROR_SERVICE_POINT_PAYMENT_ALREADY_EXIST_400,
+        message: getCatalogDescription(CatalogCode.ERROR_SERVICE_POINT_PAYMENT_ALREADY_EXIST_400),
+      });
+    }
+
     this.logger.log('[ServicePointService - getById]: Ask the service point if it is active.')
     const servicePoint = await this.servicePointService.getById(command.servicePointId);
 
@@ -43,6 +51,7 @@ export class CreateServicePointPaymentCommandHandler implements ICommandHandler<
     entity.owners_id = command.ownerId;
     entity.subscriptionType = command.subscriptionType;
     entity.billingPeriodInMonths = subscriptionDurationByType[command.subscriptionType];
+    entity.totalPaymentBySubscription = subscriptionDurationByType[command.subscriptionType] * servicePoint.price;
 
     return this.service.create(entity);
   }

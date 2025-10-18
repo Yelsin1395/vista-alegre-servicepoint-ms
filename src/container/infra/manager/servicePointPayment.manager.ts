@@ -14,19 +14,38 @@ export class ServicePointPaymentManager implements ServicePointPaymentService {
     @InjectRepository(ServicePointPayment, DatabaseConnectionType.POSTGRES_CONNECTION)
     private readonly repository: Repository<ServicePointPayment>,
   ) {}
-
   async getAllByOwnerId(ownerId: string): Promise<GetAllServicePointPaymentByOwmerResponse[]> {
     const rawResult = await this.repository
       .createQueryBuilder('spp')
       .leftJoinAndSelect(ServicePoint, 'sp', 'sp._id = spp.servicePoints_id')
-      .select(['spp._id AS _id', 'spp.servicePoints_id AS servicepoints_id', 'spp.owners_id AS owners_id', 'spp.lastPayment AS lastpayment', 'spp.nextPayment AS nextpayment', 'spp.subscriptionType AS subscriptiontype', 'spp.billingPeriodInMonths AS billingperiodinmonths', 'spp.serviceStatus AS servicestatus', 'spp.isEnabled AS isenabled', 'spp.createdAt AS createdat', 'spp.updatedAt AS updatedat', 'sp.type AS servicepointtype', 'sp.price AS servicepointprice', 'sp.description AS servicepointdescription', 'sp.createdAt AS servicepointcreatedat', 'sp.updatedAt AS servicepointupdatedat'])
-      .where('spp.owners_id = :ownerId', { ownerId })
+      .select(['spp._id AS _id', 'spp.servicePoints_id AS servicepoints_id', 'spp.owners_id AS owners_id', 'spp.lastPayment AS lastpayment', 'spp.nextPayment AS nextpayment', 'spp.subscriptionType AS subscriptiontype', 'spp.billingPeriodInMonths AS billingperiodinmonths', 'spp.totalPaymentBySubscription AS totalpaymentbysubscription', 'spp.serviceStatus AS servicestatus', 'spp.isEnabled AS isenabled', 'spp.createdAt AS createdat', 'spp.updatedAt AS updatedat', 'sp.type AS servicepointtype', 'sp.price AS servicepointprice', 'sp.description AS servicepointdescription', 'sp.createdAt AS servicepointcreatedat', 'sp.updatedAt AS servicepointupdatedat'])
+      .where('spp.owners_id = :ownerId AND spp.isDeleted = false', { ownerId })
       .getRawMany<GetAllServicePointPaymentByOwmerResponse>();
     return rawResult.map(ServicePointPaymentMapper.toServicePointPaymentByOwmerResponse);
+  }
+
+  private async getByOwnerId(id: string, ownerId: string) {
+    return this.repository.findOneBy({ _id: id, owners_id: ownerId });
+  }
+
+  async isUnique(servicePointId: string, ownerId: string): Promise<boolean> {
+    return this.repository
+      .createQueryBuilder('spp')
+      .where('spp.servicePoints_id = :servicePointId AND spp.owners_id = :ownerId AND spp.isDeleted = false', {servicePointId, ownerId})
+      .getExists();
   }
 
   async create(entity: ServicePointPayment): Promise<boolean> {
     const result = await this.repository.save(entity);
     return !!String(result._id);
+  }
+
+  async deletedByOwnerId(id: string, ownerId: string): Promise<boolean> {
+    const spp = await this.getByOwnerId(id, ownerId);
+
+    spp.isDeleted = true;
+
+    await this.repository.save(spp);
+    return true;
   }
 }
