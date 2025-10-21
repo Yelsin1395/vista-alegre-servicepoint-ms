@@ -4,6 +4,7 @@ import { CatalogCode, getCatalogDescription } from '@app/exceptions/catalog.exce
 import { subscriptionDurationByType } from '@app/common/mappers/subscriptionDurationsByType.mapper';
 import { CreateServicePointPaymentCommandImpl } from '@app/commands/impl/createServicePointPayment-command.impl';
 import { ServicePointService } from '@domain/servicepoint.service';
+import { StatusServicePointPayment } from '@domain/enums/statusServicePointPaymentType.enum';
 import { ServicePointPaymentService } from '@domain/servicePointPayment.service';
 import { ServicePointPayment } from '@domain/entities/servicePointPayment.entity';
 import { RpcException } from '@nestjs/microservices';
@@ -52,6 +53,7 @@ export class CreateServicePointPaymentCommandHandler implements ICommandHandler<
     entity.subscriptionType = command.subscriptionType;
     entity.billingPeriodInMonths = subscriptionDurationByType[command.subscriptionType];
     entity.totalPaymentBySubscription = subscriptionDurationByType[command.subscriptionType] * servicePoint.price;
+    entity.serviceStatus = StatusServicePointPayment.NEW;
 
     return this.service.create(entity);
   }
